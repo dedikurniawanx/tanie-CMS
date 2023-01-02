@@ -375,7 +375,7 @@ export async function getServerSideProps(context) {
         data {
           attributes {
             nama
-            decsription
+            description
             image {
               data {
                 attributes {
