@@ -1,7 +1,19 @@
+import { useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 export default function Home({ produk }) {
-  console.log(produk);
+  const [produks, setProduks] = useState(produk);
+  const [search, setSearch] = useState("");
+  function Find(e) {
+    setSearch(e.target.value);
+  }
+  function Cari(e) {
+    e.preventDefault();
+    const index = produk.filter(function (produck) {
+      return produck.nama.toLowerCase().includes(search.toLowerCase());
+    });
+    setProduks(index);
+  }
   return (
     <main className="main" id="top">
       <nav
@@ -56,11 +68,19 @@ export default function Home({ produk }) {
               </li>
             </ul>
           </div>
-          <form className="d-flex">
+          <form
+            className="d-flex"
+            onSubmit={function (e) {
+              Cari(e);
+            }}
+          >
             <input
+              onChange={function (e) {
+                Find(e);
+              }}
               className="form-control me-2"
               type="search"
-              placeholder="Search Product"
+              placeholder="Product"
               aria-label="Search"
             />
             <button className="btn btn-success" type="submit">
@@ -117,45 +137,46 @@ export default function Home({ produk }) {
         <div className="container">
           <div className="row">
             <div className="col-lg-9 mx-auto text-center mb-3">
-              <h5 className="fw-bold fs-3 fs-lg-5 lh-sm mb-3">
-                New Opportunities
-              </h5>
+              <h5 className="fw-bold fs-3 fs-lg-5 lh-sm mb-3">Product</h5>
             </div>
           </div>
           <div className="row flex-center h-100">
             <div className="col-xl-9">
               <div className="row">
-                {produk.map((item, index) => {
-                  console.log(item);
-                  return (
-                    <div className="col-md-4 mb-5">
-                      <div className="card h-100 shadow px-4 px-md-2 px-lg-3 card-span pt-6 p-4">
-                        <div className="text-center text-md-start card-hover">
-                          <img
-                            className="ps-3 icons"
-                            src={`http://127.0.0.1:1337${item.image.url}`}
-                            height={70}
-                            alt
-                          />
-                          <div className="card-body">
-                            <h6 className="fw-bold fs-1 heading-color">
-                              {item.nama}
-                            </h6>
-                            <p className="mt-3 mb-md-0 mb-lg-2">
-                              {item.decsription}
-                            </p>
+                {produks.length > 0 ? (
+                  produks.map((item, index) => {
+                    return (
+                      <div className="col-md-4 mb-5">
+                        <div className="card h-100 shadow px-4 px-md-2 px-lg-3 card-span pt-6 p-4">
+                          <div className="text-center text-md-start card-hover">
+                            <img
+                              className="ps-3 icons"
+                              src={`http://127.0.0.1:1337${item.image.url}`}
+                              height={70}
+                              alt
+                            />
+                            <div className="card-body">
+                              <h6 className="fw-bold fs-1 heading-color">
+                                {item.nama}
+                              </h6>
+                              <p className="mt-3 mb-md-0 mb-lg-2">
+                                {item.decsription}
+                              </p>
+                            </div>
                           </div>
+                          <Link
+                            className=" btn btn-success"
+                            href={`/produk/${item.id}`}
+                          >
+                            Detail
+                          </Link>
                         </div>
-                        <Link
-                          className=" btn btn-success"
-                          href={`/produk/${item.id}`}
-                        >
-                          Detail
-                        </Link>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                ) : (
+                  <h3 className="text-center">Not Found</h3>
+                )}
               </div>
             </div>
           </div>
@@ -348,25 +369,6 @@ export default function Home({ produk }) {
             backgroundSize: "cover",
           }}
         />
-        {/*/.bg-holder*/}
-        {/* <div className="container">
-          <hr className="text-300 mb-0" />
-          <div className="row flex-center py-5">
-            <div className="text-center">
-              <a className="text-decoration-none" href="#">
-                <img
-                  className="d-inline-block align-top img-fluid"
-                  src="assets/img/gallery/logo-icon.png"
-                  alt
-                  width={40}
-                />
-                <span className="text-theme font-monospace fs-3 ps-2">
-                  Tanie
-                </span>
-              </a>
-            </div>
-          </div>
-        </div> */}
       </section>
     </main>
   );

@@ -1,6 +1,5 @@
 import axios from "axios";
 export default function Home({ produks, url }) {
-  console.log(produks, url);
   return (
     <main className="main" id="top">
       <nav
