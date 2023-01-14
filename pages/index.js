@@ -372,28 +372,6 @@ export default function Home({ produk }) {
   );
 }
 export async function getServerSideProps(context) {
-  // const querry = gql`
-  //   query {
-  //     produks {
-  //       data {
-  //         attributes {
-  //           nama
-  //           description
-  //           image {
-  //             data {
-  //               attributes {
-  //                 name
-  //                 url
-  //               }
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // `;
-  // const response = await client.query({ query: querry });
-
   const response = await axios.get(
     "http://127.0.0.1:1337/api/produks?populate=*"
   );
