@@ -1,15 +1,7 @@
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  gql,
-} from "@apollo/client";
+import Link from "next/link";
 import axios from "axios";
-const client = new ApolloClient({
-  uri: "http://127.0.0.1:1337/graphql/",
-  cache: new InMemoryCache(),
-});
 export default function Home({ produk }) {
+  console.log(produk);
   return (
     <main className="main" id="top">
       <nav
@@ -37,7 +29,7 @@ export default function Home({ produk }) {
                 <a
                   className="nav-link fw-medium active"
                   aria-current="page"
-                  href="#header"
+                  href="/"
                 >
                   Home
                 </a>
@@ -64,6 +56,17 @@ export default function Home({ produk }) {
               </li>
             </ul>
           </div>
+          <form className="d-flex">
+            <input
+              className="form-control me-2"
+              type="search"
+              placeholder="Search Product"
+              aria-label="Search"
+            />
+            <button className="btn btn-success" type="submit">
+              Search
+            </button>
+          </form>
         </div>
       </nav>
       <section className="py-0" id="header">
@@ -97,9 +100,6 @@ export default function Home({ produk }) {
                 agricultural producers with online self service applications and
                 educational materials.
               </p>
-              <a className="btn btn-lg btn-success" href="#" role="button">
-                Invest Now
-              </a>
             </div>
           </div>
         </div>
@@ -120,35 +120,38 @@ export default function Home({ produk }) {
               <h5 className="fw-bold fs-3 fs-lg-5 lh-sm mb-3">
                 New Opportunities
               </h5>
-              <p className="mb-5">
-                We are the first and the only crowdfunding platform enabling you
-                to help finance our farmers.
-              </p>
             </div>
           </div>
           <div className="row flex-center h-100">
             <div className="col-xl-9">
               <div className="row">
-                {produk.produks.data.map((item, index) => {
+                {produk.map((item, index) => {
+                  console.log(item);
                   return (
                     <div className="col-md-4 mb-5">
-                      <div className="card h-100 shadow px-4 px-md-2 px-lg-3 card-span pt-6">
+                      <div className="card h-100 shadow px-4 px-md-2 px-lg-3 card-span pt-6 p-4">
                         <div className="text-center text-md-start card-hover">
                           <img
                             className="ps-3 icons"
-                            src={`http://127.0.0.1:1337${item.attributes.image.data.attributes.url}`}
+                            src={`http://127.0.0.1:1337${item.image.url}`}
                             height={70}
                             alt
                           />
                           <div className="card-body">
                             <h6 className="fw-bold fs-1 heading-color">
-                              {item.attributes.nama}
+                              {item.nama}
                             </h6>
                             <p className="mt-3 mb-md-0 mb-lg-2">
-                              {item.attributes.decsription}
+                              {item.decsription}
                             </p>
                           </div>
                         </div>
+                        <Link
+                          className=" btn btn-success"
+                          href={`/produk/${item.id}`}
+                        >
+                          Detail
+                        </Link>
                       </div>
                     </div>
                   );
@@ -369,32 +372,31 @@ export default function Home({ produk }) {
   );
 }
 export async function getServerSideProps(context) {
-  const querry = gql`
-    query {
-      produks {
-        data {
-          attributes {
-            nama
-            description
-            image {
-              data {
-                attributes {
-                  name
-                  url
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  `;
-  const response = await client.query({ query: querry });
+  // const querry = gql`
+  //   query {
+  //     produks {
+  //       data {
+  //         attributes {
+  //           nama
+  //           description
+  //           image {
+  //             data {
+  //               attributes {
+  //                 name
+  //                 url
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // `;
+  // const response = await client.query({ query: querry });
 
-  // console.log(response);
-  // const response = await axios.get(
-  //   "http://127.0.0.1:1337/api/produks?populate=*"
-  // );
+  const response = await axios.get(
+    "http://127.0.0.1:1337/api/produks?populate=*"
+  );
 
   const produk = await response.data;
   return {
