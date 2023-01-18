@@ -1,9 +1,31 @@
+import { useRouter } from "next/router";
 import axios from "axios";
-export default function Home({ produks }) {
+import { useState } from "react";
+export default function Home({ kategori }) {
+  const [namaKategori, setNama] = useState(kategori.data.attributes.nama);
+  function Change(e) {
+    setNama(e.target.value);
+  }
+  const router = useRouter();
+  async function send(e) {
+    e.preventDefault();
+    const put = await axios({
+      url: `http://127.0.0.1:1337/api/kategoris/${kategori.data.id}`,
+      method: "PUT",
+      data: {
+        data: {
+          nama: namaKategori,
+        },
+      },
+    });
+    alert("YAKIN DECK ?");
+    setNama("");
+    router.replace("/admin");
+  }
   return (
-    <main className="main" id="top">
+    <div>
       <nav
-        className="navbar navbar-expand-lg navbar-light fixed-top py-3 bg-light opacity-85"
+        className="navbar navbar-expand-lg navbar-light py-3 bg-light opacity-85"
         data-navbar-on-scroll="data-navbar-on-scroll"
       >
         <div className="container">
@@ -33,6 +55,11 @@ export default function Home({ produks }) {
                 </a>
               </li>
               <li className="nav-item px-2">
+                <a className="nav-link fw-medium" href="/admin">
+                  Admin{" "}
+                </a>
+              </li>
+              <li className="nav-item px-2">
                 <a className="nav-link fw-medium" href="#Opportuanities">
                   Opportuanities
                 </a>
@@ -54,57 +81,54 @@ export default function Home({ produks }) {
               </li>
             </ul>
           </div>
-          <form className="d-flex">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search Product"
-              aria-label="Search"
-            />
-            <button className="btn btn-success" type="submit">
-              Search
-            </button>
-          </form>
         </div>
       </nav>
-      <section className="py-5">
-        <div className="container px-4 px-lg-5 my-5">
-          <div className="row gx-4 gx-lg-5 align-items-center">
-            <div className="col-md-6">
-              <img
-                className="card-img-top mb-5 mb-md-0"
-                src={`http://127.0.0.1:1337${produks.data.attributes.image.data.attributes.url}`}
-                alt="..."
+      <div className="container">
+        <img
+          src="/assets/img/admin.png"
+          className="mx-auto d-block"
+          alt="..."
+          width={200}
+          height={200}
+        />
+        <form
+          onSubmit={function (e) {
+            send(e);
+          }}
+          className="p-2"
+        >
+          <div className="row d-flex justify-content-center">
+            <div className="mb-3 col-lg-4 ">
+              <input
+                value={namaKategori}
+                type="text"
+                onChange={function (e) {
+                  Change(e);
+                }}
+                className="form-control"
+                id="exampleFormControlInput1"
+                placeholder="Add Kategori"
               />
-            </div>
-            <div className="col-md-6">
-              <h1 className="display-5 fw-bolder">
-                {produks.data.attributes.nama}
-              </h1>
-              <div className="mb-3">
-                {produks.data.attributes.harga.map((item, index) => {
-                  return (
-                    <p>
-                      {item.nama}:{item.harga}
-                    </p>
-                  );
-                })}
-              </div>
-
-              <p className="lead">{produks.data.attributes.description}</p>
+              <button
+                type="submit"
+                className=" mt-3 btn btn-primary rounded mx-auto d-block
+              "
+              >
+                Edit Kategori
+              </button>
             </div>
           </div>
-        </div>
-      </section>
-    </main>
+        </form>
+      </div>
+    </div>
   );
 }
 export async function getServerSideProps(req, res) {
   const response = await axios.get(
-    `http://127.0.0.1:1337/api/produks/${req.query.id}?populate=*`
+    `http://127.0.0.1:1337/api/kategoris/${req.query.id}`
   );
-  const produks = response.data;
+  const kategori = response.data;
   return {
-    props: { produks },
+    props: { kategori },
   };
 }

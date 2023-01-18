@@ -47,6 +47,11 @@ export default function Home({ produk }) {
                 </a>
               </li>
               <li className="nav-item px-2">
+                <a className="nav-link fw-medium" href="/admin">
+                  Admin{" "}
+                </a>
+              </li>
+              <li className="nav-item px-2">
                 <a className="nav-link fw-medium" href="#Opportuanities">
                   Opportuanities
                 </a>
@@ -61,32 +66,8 @@ export default function Home({ produk }) {
                   Invest
                 </a>
               </li>
-              <li className="nav-item px-2">
-                <a className="nav-link fw-medium" href="#contact">
-                  Contact{" "}
-                </a>
-              </li>
             </ul>
           </div>
-          <form
-            className="d-flex"
-            onSubmit={function (e) {
-              Cari(e);
-            }}
-          >
-            <input
-              onChange={function (e) {
-                Find(e);
-              }}
-              className="form-control me-2"
-              type="search"
-              placeholder="Product"
-              aria-label="Search"
-            />
-            <button className="btn btn-success" type="submit">
-              Search
-            </button>
-          </form>
         </div>
       </nav>
       <section className="py-0" id="header">
@@ -140,6 +121,25 @@ export default function Home({ produk }) {
               <h5 className="fw-bold fs-3 fs-lg-5 lh-sm mb-3">Product</h5>
             </div>
           </div>
+          <form
+            className="d-flex p-5"
+            onSubmit={function (e) {
+              Cari(e);
+            }}
+          >
+            <input
+              onChange={function (e) {
+                Find(e);
+              }}
+              className="form-control me-2"
+              type="search"
+              placeholder="Product"
+              aria-label="Search"
+            />
+            <button className="btn btn-success" type="submit">
+              Search
+            </button>
+          </form>
           <div className="row flex-center h-100">
             <div className="col-xl-9">
               <div className="row">
